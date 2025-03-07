@@ -262,7 +262,7 @@ cdef extern from "rxs_parsing_core/ModularPicoScenesFrame.hxx":
 
     # BasebandSignalSegment.hxx
     cdef cppclass BasebandSignalSegment:
-        const SignalMatrix[ccomplex[float]] & getSignalMatrix() const
+        const SignalMatrix[ccomplex[float]] & getSignals() const
 
     # PreEQSymbolsSegment.hxx
     cdef cppclass PreEQSymbolsSegment:
@@ -578,9 +578,13 @@ cdef parse(optional[ModularPicoScenesRxFrame] *frame):
         #     data["PilotCSI"] = parse_CSI(&(deref(deref(frame_value.pilotCSISegment).getCSI())))
         if frame_value.legacyCSISegment:
             data["LegacyCSI"] = parse_CSI(&(deref(deref(frame_value.legacyCSISegment).getCSI())))
+        # if frame_value.basebandSignalSegment:
+        #     #data["BasebandSignals"] = parse_SignalMatrix(&(deref(frame_value.basebandSignalSegment).getFloat32SignalMatrix()))
+        #     data["BasebandSignals"] = parse_SignalMatrix(&(deref(frame_value.basebandSignalSegment).getSignals()))
         if frame_value.basebandSignalSegment:
-            #data["BasebandSignals"] = parse_SignalMatrix(&(deref(frame_value.basebandSignalSegment).getFloat32SignalMatrix()))
-            data["BasebandSignals"] = parse_SignalMatrix(&(deref(frame_value.basebandSignalSegment).getSignals()))
+            cdef const SignalMatrix[ccomplex[float]] & sig_matrix = deref(
+                frame_value.basebandSignalSegment).getSignals()
+            data["BasebandSignals"] = parse_SignalMatrix(&sig_matrix)
 
         #        if frame_value.preEQSymbolsSegment:
 #            data["PreEQSymbols"] = parse_SignalMatrix(&(deref(frame_value.preEQSymbolsSegment).getPreEqSymbols()))
