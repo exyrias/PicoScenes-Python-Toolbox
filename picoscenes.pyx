@@ -579,8 +579,10 @@ cdef parse(optional[ModularPicoScenesRxFrame] *frame):
         if frame_value.legacyCSISegment:
             data["LegacyCSI"] = parse_CSI(&(deref(deref(frame_value.legacyCSISegment).getCSI())))
         if frame_value.basebandSignalSegment:
-            data["BasebandSignals"] = parse_SignalMatrix(&(deref(frame_value.basebandSignalSegment).getFloat32SignalMatrix()))
-#        if frame_value.preEQSymbolsSegment:
+            #data["BasebandSignals"] = parse_SignalMatrix(&(deref(frame_value.basebandSignalSegment).getFloat32SignalMatrix()))
+            data["BasebandSignals"] = parse_SignalMatrix(&(deref(frame_value.basebandSignalSegment).getSignals()))
+
+        #        if frame_value.preEQSymbolsSegment:
 #            data["PreEQSymbols"] = parse_SignalMatrix(&(deref(frame_value.preEQSymbolsSegment).getPreEqSymbols()))
         # if frame_value.dpasRequestSegment:
         #     data["DpasRequestSegment"] = parse_DpasRequestSegment(
