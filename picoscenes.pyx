@@ -557,6 +557,7 @@ cdef parse_SignalMatrix(const SignalMatrix[ccomplex[float]] *m):
     return np.asarray(m.array).reshape(m.dimensions)
 
 cdef parse(optional[ModularPicoScenesRxFrame] *frame):
+    cdef const SignalMatrix[ccomplex[float]] *sig_matrix_ptr = NULL  # 在这里声明
     data = {}
     cdef ModularPicoScenesRxFrame frame_value
     if frame.has_value():
@@ -581,10 +582,10 @@ cdef parse(optional[ModularPicoScenesRxFrame] *frame):
         # if frame_value.basebandSignalSegment:
         #     #data["BasebandSignals"] = parse_SignalMatrix(&(deref(frame_value.basebandSignalSegment).getFloat32SignalMatrix()))
         #     data["BasebandSignals"] = parse_SignalMatrix(&(deref(frame_value.basebandSignalSegment).getSignals()))
+
         if frame_value.basebandSignalSegment:
-            cdef const SignalMatrix[ccomplex[float]] & sig_matrix = deref(
-                frame_value.basebandSignalSegment).getSignals()
-            data["BasebandSignals"] = parse_SignalMatrix(&sig_matrix)
+            sig_matrix_ptr = &deref(frame_value.basebandSignalSegment).getSignals()
+            data["BasebandSignals"] = parse_SignalMatrix(sig_matrix_ptr)
 
         #        if frame_value.preEQSymbolsSegment:
 #            data["PreEQSymbols"] = parse_SignalMatrix(&(deref(frame_value.preEQSymbolsSegment).getPreEqSymbols()))
