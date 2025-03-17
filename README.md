@@ -1,147 +1,118 @@
-# PicoscenesToolbox
+# Picoscenes Python Toolbox
 
-The official Python toolbox for parsing the PicoScenes **.csi** files.
+The official Python toolbox for parsing **.csi** files from PicoScenes.
 
 ## Highlights
 
-- Support Linux, macOS and windows
-- Easy to use 
-- Faster parsing than the MATLAB implementation
-- High scalability
-- The official toolbox for parsing .csi
+- Supports Linux, macOS, and Windows  
+- Easy to use  
+- Faster parsing than the MATLAB implementation  
+- High scalability  
+- The official toolbox for parsing **.csi** files  
 
-## Preparation steps on Windows 10 or 11
+## Preparation on Windows 10 or 11
 
-1. Install [TDM-GCC-64](https://jmeubank.github.io/tdm-gcc/) (choose MinGW-w64 based version, version 10.3+);
-2. Set Compiler to MinGW64 using [mingw64ccompiler](https://github.com/imba-tjd/mingw64ccompiler)
+1. Install [TDM-GCC-64](https://jmeubank.github.io/tdm-gcc/) (choose the MinGW-w64-based version, version 10.3+).
+2. Set the compiler to MinGW64 using [mingw64ccompiler](https://github.com/imba-tjd/mingw64ccompiler):
+
 ```bash
 pip install git+https://github.com/imba-tjd/mingw64ccompiler
 python -m mingw64ccompiler install_specs  # Run once
 python -m mingw64ccompiler install        # Works with venv
 ```
 
-## Install
+## Installation
 
-1. Git clone this repository with `--recursive` option.
+1. Clone this repository with the `--recursive` option:
 
 ```bash
 git clone https://github.com/Herrtian/PicoscenesToolbox.git --recursive
 ```
 
-2.  install python and dependency
+2. Install Python and dependencies:
 
 ```bash
 sudo apt update
-sudo apt install python3
-sudo apt install python3-pip
+sudo apt install python3 python3-pip
 ```
 
-* If you are **Chinese** user, you can change pip source to accelerate download speed.
+- If you are a **Chinese** user, you can change the pip source to accelerate the download speed:
 
 ```bash
 pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
 ```
 
-* install dependency
+- Install dependencies:
 
- ```python
- pip3 install -r requirements.txt 
- ```
+```bash
+pip3 install -r requirements.txt 
+```
 
-3. Build the program  
+3. Build the program:
 
 ```bash
 python3 setup.py build_ext --inplace
 ```
 
+## Quick Start
 
-
-## Quick start
-
-**rx_by_usrpN210.csi** is a sample binary csi file created by **Picoscenes**,now we will use it to create a chart.
+A sample binary **.csi** file (**rx_by_usrpN210.csi**) created by **PicoScenes** will be used to generate a chart.
 
 ```python
-# main.py 
+# main.py
 
-from picoscenes import  Picoscenes
+from picoscenes import Picoscenes
 import numpy as np
 import matplotlib.pyplot as plt
 
-i = 0  # stands for the first frame of csi frames
+i = 0  # Index for the first CSI frame
 
 frames = Picoscenes("rx_by_usrpN210.csi")
 numTones = frames.raw[i].get("CSI").get("numTones")
 SubcarrierIndex = np.array(frames.raw[i].get("CSI").get("SubcarrierIndex"))
 Mag = np.array(frames.raw[i].get("CSI").get("Mag"))[:numTones]
 
-plt.title(" Magnitude Demo")
-plt.xlabel("x axis subcarryindex ")
-plt.ylabel("y axis Magnitude")
+plt.title("Magnitude Demo")
+plt.xlabel("Subcarrier Index")
+plt.ylabel("Magnitude")
 plt.plot(SubcarrierIndex, Mag)
 plt.show()
-
 ```
 
-  **main.py** is included in the working dir.
+The file **main.py** is included in the working directory.
 
-  This programm shows the first frame of **rx_by_usrpN210.csi** ,and draws the picture whose x-ray stands for **SubcarrierIndex** and y-ray stands for **Magnitude**.
+This program reads the first frame of **rx_by_usrpN210.csi** and generates a plot where the x-axis represents the **Subcarrier Index**, and the y-axis represents **Magnitude**.
 
-### run the file
+### Run the script
 
 ```bash
 python3 main.py
 ```
 
-If you run the programm successfully, you will get the result like this :
+If the script runs successfully, you should see an output similar to:
 
 ![](docs/Figure_1.png)
 
+## Documentation
 
+For more details about **PicoscenesToolbox**, refer to the **./docs** folder or visit the [wiki]().
 
-## Wiki && Docs
+## Issues & Feedback
 
-If you want to know more details about PicoscenesToolbox , you can seek **./docs** and [wiki]()
+If you encounter any issues or have questions about **PicoscenesToolbox**, please submit an **issue** on GitHub.
 
+Consider giving this project a **star** or **fork** if you find it useful!
 
+## References
 
-## Mistakes && Issues
-
-If you have some questions on PicoscenesToolbox, please make me know and submit **issues** what you met.
-
-Welcome to give this programm a **star** or **fork**.
-
-
-
-## Reference Links
-
-* **[PicoScenes](https://ps.zpj.io/)**: A powerful Wi-Fi sensing platform middleware for a wide range of hardware.
-  * This project was released by [Zhiping Jiang](https://zpj.io/bio/).
-* [**csiread**](https://github.com/citysu/csiread): A fast channel state information parser for Intel, Atheros, Nexmon and ESP32 in Python.
-  - This project released by [citysu/csiread](https://github.com/citysu/csiread) inspires PicoscenesToolbox.
-
-
+- **[PicoScenes](https://ps.zpj.io/)**: A powerful Wi-Fi sensing platform middleware for a wide range of hardware.  
+  - This project was released by [Zhiping Jiang](https://zpj.io/bio/).
+- [**csiread**](https://github.com/citysu/csiread): A fast channel state information parser for Intel, Atheros, Nexmon, and ESP32 in Python.  
+  - This project, developed by [citysu](https://github.com/citysu/csiread), served as inspiration for **PicoscenesToolbox**.
 
 ## License
 
-The code in this project is licensed under MIT license. That means if you are building project by this programm,  I would greatly appreciate if you could cite this repository.
+This project is licensed under the **MIT License**. If you use this toolbox in your project, citing this repository would be greatly appreciated.
 
-* "Tian Teng. PicoscenesToolbox: An official tool plugins for parsing **.csi** from picosecenes in Python. (2021). https://github.com/Herrtian/PicoscenesToolbox."
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
+Tian Teng. PicoscenesToolbox: An official tool plugin for parsing **.csi** from PicoScenes in Python. (2021). https://github.com/Herrtian/PicoscenesToolbox.
