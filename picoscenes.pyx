@@ -6,7 +6,7 @@ SEEK_END, SEEK_SET, SEEK_CUR)
 from libcpp.memory cimport shared_ptr
 from libc.stdint cimport (uint8_t, uint16_t, uint32_t, uint64_t,
 int8_t, int16_t, int32_t, int64_t)
-from libc.stdlib cimport malloc, realloc, free
+from libc.stdlib cimport malloc, realloc, free, exit
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp.complex cimport complex as ccomplex
