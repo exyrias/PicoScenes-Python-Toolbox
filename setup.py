@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import List
 
 import numpy
-from Cython.Build import cythonize
+from Cython.Build.Dependencies import cythonize
 from setuptools import find_packages, setup
 from setuptools.command.build_ext import build_ext
 from setuptools.extension import Extension
