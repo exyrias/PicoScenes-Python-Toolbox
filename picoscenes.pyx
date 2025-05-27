@@ -13,7 +13,7 @@ from libcpp.complex cimport complex as ccomplex
 from cython.operator cimport dereference as deref
 
 import numpy as np
-
+import sys
 
 cdef extern from "<optional>" namespace "std" nogil:
     cdef cppclass optional[T]:
@@ -315,7 +315,7 @@ cdef class Picoscenes:
         f = fopen(datafile, "rb")
         if f is NULL:
             printf("Open failed!\n")
-            exit(-1)
+            sys.exit(-1)
 
         fseek(f, 0, SEEK_END)
         cdef long lens = ftell(f)
@@ -588,7 +588,7 @@ cdef parse(optional[ModularPicoScenesRxFrame] *frame):
             data["BasebandSignals"] = parse_SignalMatrix(sig_matrix_ptr)
 
         #        if frame_value.preEQSymbolsSegment:
-#            data["PreEQSymbols"] = parse_SignalMatrix(&(deref(frame_value.preEQSymbolsSegment).getPreEqSymbols()))
+        #            data["PreEQSymbols"] = parse_SignalMatrix(&(deref(frame_value.preEQSymbolsSegment).getPreEqSymbols()))
         # if frame_value.dpasRequestSegment:
         #     data["DpasRequestSegment"] = parse_DpasRequestSegment(
         #         deref(frame_value.dpasRequestSegment).getRequest())

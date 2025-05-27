@@ -33,7 +33,7 @@ git clone https://github.com/Herrtian/PicoscenesToolbox.git --recursive
 
 ```bash
 sudo apt update
-sudo apt install python3 python3-pip
+sudo apt install python3 python3-pip python3-venv
 ```
 
 - If you are a **Chinese** user, you can change the pip source to accelerate the download speed:
@@ -42,54 +42,31 @@ sudo apt install python3 python3-pip
 pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
 ```
 
-- Install dependencies:
+Preferrably, create a virtual environment
 
 ```bash
-pip3 install -r requirements.txt 
+python3 -m venv .venv
+source .venv/bin/activate  # or run venv\Scripts\activate on Windows
 ```
 
-3. Build the program:
+3. Build the package
 
 ```bash
-python3 setup.py build_ext --inplace
+pip3 install .  # add -e for an editable; so no reinstall is required on changes
 ```
 
-## Quick Start
+## Quick start
 
-A sample binary **.csi** file (**rx_by_usrpN210.csi**) created by **PicoScenes** will be used to generate a chart.
-
-```python
-# main.py
-
-from picoscenes import Picoscenes
-import numpy as np
-import matplotlib.pyplot as plt
-
-i = 0  # Index for the first CSI frame
-
-frames = Picoscenes("rx_by_usrpN210.csi")
-numTones = frames.raw[i].get("CSI").get("numTones")
-SubcarrierIndex = np.array(frames.raw[i].get("CSI").get("SubcarrierIndex"))
-Mag = np.array(frames.raw[i].get("CSI").get("Mag"))[:numTones]
-
-plt.title("Magnitude Demo")
-plt.xlabel("Subcarrier Index")
-plt.ylabel("Magnitude")
-plt.plot(SubcarrierIndex, Mag)
-plt.show()
-```
-
-The file **main.py** is included in the working directory.
-
-This program reads the first frame of **rx_by_usrpN210.csi** and generates a plot where the x-axis represents the **Subcarrier Index**, and the y-axis represents **Magnitude**.
-
-### Run the script
+**rx_by_usrpN210.csi** is a sample binary csi file created by **Picoscenes**.
+Refer to `main.py` for an example usage on how to parse and plot the collected CSI.
+This example shows the first frame of **rx_by_usrpN210.csi** and creates a plot
+with x-axis representing **SubcarrierIndex** and y-axis showing **Magnitude**.
 
 ```bash
 python3 main.py
 ```
 
-If the script runs successfully, you should see an output similar to:
+On a successful run, you should see an output similar to:
 
 ![](docs/Figure_1.png)
 
