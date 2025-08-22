@@ -598,3 +598,8 @@ cdef parse(optional[ModularPicoScenesRxFrame] *frame):
 
     # print(data)
     return data
+
+
+def ParseOneFrameFromBuffer(const uint8_t *buffer, uint32_t bufferLength, bint interpolateCSI):
+    frame = ModularPicoScenesRxFrame.fromBuffer(buffer, bufferLength, interpolateCSI)
+    return parse(&frame)
