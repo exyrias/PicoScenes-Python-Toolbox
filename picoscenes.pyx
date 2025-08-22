@@ -291,22 +291,23 @@ cdef extern from "rxs_parsing_core/ModularPicoScenesFrame.hxx":
 cdef class Picoscenes:
     cdef readonly str file
     cdef readonly int count
+    cdef readonly int next_pos
     cdef public list raw
     cdef bint if_report
 
-    def __cinit__(self, file, if_report=True, *argv, **kw):
+    def __cinit__(self, file, long pos=0, long end=0, interpolate=True, if_report=True, *argv, **kw):
         self.file = file
         self.if_report = if_report
         self.raw = list()
-        self.read()
+        self.read(self.file, pos, end, interpolate)
 
-    def __init__(self, file, if_report=True):
+    def __init__(self, file, pos, end, interpolate=True, if_report=True):
         pass
 
     cpdef read(self):
         self.seek(self.file, 0, 0)
 
-    cpdef seek(self, file, long pos, long num):
+    cpdef seek(self, file, long pos, long end, interpolate=True):
         cdef FILE *f
 
         tempfile = file.encode(encoding="utf-8")
@@ -314,8 +315,7 @@ cdef class Picoscenes:
 
         f = fopen(datafile, "rb")
         if f is NULL:
-            printf("Open failed!\n")
-            sys.exit(-1)
+            raise Exception("Open failed!")
 
         fseek(f, 0, SEEK_END)
         cdef long lens = ftell(f)
@@ -328,8 +328,8 @@ cdef class Picoscenes:
         cdef unsigned char *buf
         cdef optional[ModularPicoScenesRxFrame] frame
 
-        if num == 0:
-            num = lens
+        if end == 0:
+            end = lens
         if self.raw:
             self.raw.clear()
 
@@ -346,16 +346,17 @@ cdef class Picoscenes:
             l = <int> fread(buf, sizeof(unsigned char), field_len, f)
 
             # rxs_parsing_core
-            frame = ModularPicoScenesRxFrame.fromBuffer(buf, field_len, True)
+            frame = ModularPicoScenesRxFrame.fromBuffer(buf, field_len, interpolate)
             self.raw.append(parse(&frame))
 
             pos += field_len
             count += 1
-            if count >= num:
+            if pos >= end:
                 break
         free(buf)
         fclose(f)
         self.count = count
+        self.next_pos = pos
 
     cpdef pmsg(self, unsigned char *data):
         # This method hasn't been ready
