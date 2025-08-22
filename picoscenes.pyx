@@ -299,7 +299,7 @@ cdef class Picoscenes:
         self.file = file
         self.if_report = if_report
         self.raw = list()
-        self.read(self.file, pos, end, interpolate)
+        self.seek(self.file, pos, end, interpolate)
 
     def __init__(self, file, pos, end, interpolate=True, if_report=True):
         pass
